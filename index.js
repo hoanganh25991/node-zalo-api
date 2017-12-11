@@ -22,10 +22,23 @@ const waitToken = new Promise(rslv => {
 	});
 })
 
+waitToken.then(token => _(token))
+
 waitToken.then(accessToken => {
   ZSClient.setAccessToken(accessToken);
   const waitApi = new Promise(rslv => {
     ZSClient.api('me', 'GET', { fields: 'id, name, birthday, gender, picture' }, (res) => {
+      rslv(res);
+    });
+  })
+
+  waitApi.then(res => _(res))
+})
+
+waitToken.then(accessToken => {
+  ZSClient.setAccessToken(accessToken);
+  const waitApi = new Promise(rslv => {
+    ZSClient.api('me/invitable_friends', 'GET', { fields: 'id, name, birthday, gender, picture', limit: 20, offset: 5 }, (res) => {
       rslv(res);
     });
   })
